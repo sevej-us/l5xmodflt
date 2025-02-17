@@ -109,11 +109,31 @@ class Inhibited(AttributeDescriptor):
         return str(value).lower()
 
 
+class MajorFault(AttributeDescriptor):
+    """Descriptor class for the module MajorFault attribute.
+
+    Handles conversions between the XML attribute string and boolean values.
+    """
+
+    def from_xml(self, raw):
+        """Converts the XML attribute string into a boolean value."""
+        return True if raw == 'true' else False
+
+    def to_xml(self, unused, value):
+        """Converts a boolean value into an XML attribute string."""
+        if not isinstance(value, bool):
+            raise TypeError("Module MajorFault value must be a bool.")
+
+        # Boolean attribute values are in lower-case.
+        return str(value).lower()
+
+
 class Module(object):
     """Accessor object for a communication module."""
     snn = SafetyNetworkNumber()
     inhibited = Inhibited('Inhibited')
-
+    majorfault = MajorFault('MajorFault')
+    
     def __init__(self, element):
         self.element = element
         ports_element = element.find('Ports')
